@@ -1,0 +1,10 @@
+flask
+flask_sqlalchemy
+flask_mail
+itsdangerous
+werkzeug
+requests
+python-dotenv
+gunicorn
+os.system("pip install -r requirements.txt")
+sqlalchemy

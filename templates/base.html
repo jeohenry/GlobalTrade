@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Global Trade Options{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+{% block content %}
+
+<header>
+  <h1>GLOBAL TRADE OPTIONS</h1>
+  <p>Secure Investments, Smart Returns</p>
+</header>
+
+<nav>
+  {% if session.get('user_id') %}
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+  {% elif session.get('admin') %}
+    <a href="/admin">Dashboard</a>
+    <a href="/logout">Logout</a>
+  {% else %}
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+    <a href="/admin/login">Admin</a>
+  {% endif %}
+</nav>
+  
+<section class="section">
+  <h2>Our Investment Options</h2>
+
+  <div class="card">
+    <h3>Stocks & Bonds</h3>
+    <p>Diversify your portfolio with global stock and bond options.</p>
+    <button class="btn" onclick="showModal('Stocks & Bonds')">View Details</button>
+  </div>
+
+  <div class="card">
+    <h3>Real Estate</h3>
+    <p>Invest in profitable and secure real estate ventures.</p>
+    <button class="btn" onclick="showModal('Real Estate')">View Details</button>
+  </div>
+
+  <div class="card">
+    <h3>Crypto Portfolios</h3>
+    <p>Get high-yield returns through carefully managed crypto assets.</p>
+    <button class="btn" onclick="showModal('Crypto Portfolios')">View Details</button>
+  </div>
+</section>
+   
+<!-- Investment Modal -->
+<div id="investmentModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h3 id="modalTitle"></h3>
+    <p>
+      Minimum investment: <strong>$100</strong><br>
+      Expected Return: <strong>50% - 100%</strong><br>
+      Eàch Day: <strong>$20-minimum</strong><br>
+      Duration: <strong>5 Days</strong>
+    </p>
+    <p>
+      <strong>Example:</strong><br>
+      Invest $100 → Get back $200 - $300 an more after 5 days.
+    </p>
+  </div>
+</div>
+
+<section class="section">
+  <h2>Investment Trends (Live Chart)</h2>
+  <canvas id="investmentChart" width="600" height="300"></canvas>
+</section>
+  
+<section class="section">
+  <h2>Live Crypto Prices</h2>
+  <div id="cryptoPrices">Loading prices...</div>
+</section>
+  
+<p>
+<h1>Global Trade Options</h1>
+</p>
+<nav>
+  <a href="#services">Services</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</nav>
+  </header>
+
+  <section class="hero">
+<h1>Invest Smart. Secure Your Future.</h1>
+  </section>
+
+  <section id="services" class="section">
+<h2>Our Investment Services</h2>
+<div class="services">
+  <div class="service">
+    <h3>Stocks & Bonds</h3>
+    <p>Access top-rated financial instruments across global markets.</p>
+  </div>
+  <div class="service">
+    <h3>Real Estate</h3>
+    <p>Invest in secure, high-return properties with trusted partners.</p>
+  </div>
+  <div class="service">
+    <h3>Crypto Portfolios</h3>
+    <p>Diversify with top-performing cryptocurrencies and DeFi assets.</p>
+  </div>
+</div>
+  </section>
+
+  <section id="about" class="section">
+<h2>About Global Trade Options</h2>
+<p>
+  Global Trade Options is a trusted investment platform helping individuals grow wealth
+  through smart and secure investment opportunities. Our mission is to simplify finance
+  and provide tools for long-term financial success.
+</p>
+  </section>
+
+  <section id="contact" class="section">
+<h2>Contact Us</h2>
+<form class="contact-form">
+  <input type="text" placeholder="Your Name" required>
+  <input type="email" placeholder="Your Email" required>
+  <textarea placeholder="Your Message" rows="5" required></textarea>
+  <button type="submit">Send Message</button>
+</form>
+  </section>
+
+<footer>
+  &copy; 2025 Global Trade Options. All rights reserved.
+</footer>
+  {% endblock %}
+<script src="/static/script.js"></script>
+</body>
+</html>

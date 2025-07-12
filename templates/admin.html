@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Admin - GTO{% endblock %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+<form method="post">
+    <h2>Admin Dashboard</h2>
+    <h4>Users</h4>
+    <ul class="list-group mb-3">
+        {% for u in users %}
+            <li class="list-group-item">{{ u.username }} - {{ u.email }} - Confirmed: {{ u.confirmed }}</li>
+        {% endfor %}
+    </ul>
+
+    <h4>Transactions</h4>
+    {% for t in transactions %}
+        <form method="post" action="/admin/complete/{{ t.id }}">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                ${{ t.amount }} - {{ t.payment_status }}
+                <button class="btn btn-sm btn-success">Mark Paid</button>
+            </li>
+        </form>
+    {% endfor %}
+
+    <h4>Withdrawals</h4>
+    {% for w in withdrawals %}
+        <form method="post" action="/admin/approve-withdrawal/{{ w.id }}">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ w.username }} - ${{ w.amount }} - {{ w.status }}
+                <button class="btn btn-sm btn-primary">Approve</button>
+            </li>
+        </form>
+    {% endfor %}
+
+    <a class="btn btn-outline-danger mt-3" href="/logout">Logout</a>
+</form>
+{% endblock %}
