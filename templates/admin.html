@@ -1,36 +1,58 @@
 {% extends "base.html" %}
 {% block title %}Admin - GTO{% endblock %}
 {% block content %}
-<h2>Admin Dashboard</h2>
-<form method="post">
-    <h2>Admin Dashboard</h2>
-    <h4>Users</h4>
-    <ul class="list-group mb-3">
-        {% for u in users %}
-            <li class="list-group-item">{{ u.username }} - {{ u.email }} - Confirmed: {{ u.confirmed }}</li>
-        {% endfor %}
-    </ul>
 
-    <h4>Transactions</h4>
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<!-- USERS SECTION -->
+<h4 class="mt-4">Users</h4>
+<ul class="list-group mb-3">
+  {% if users %}
+    {% for u in users %}
+      <li class="list-group-item">
+        {{ u.username }} - {{ u.email }} - Confirmed: {{ 'Yes' if u.confirmed else 'No' }}
+      </li>
+    {% endfor %}
+  {% else %}
+    <li class="list-group-item text-muted">No users yet.</li>
+  {% endif %}
+</ul>
+
+<!-- TRANSACTIONS SECTION -->
+<h4 class="mt-4">Transactions</h4>
+<ul class="list-group mb-3">
+  {% if transactions %}
     {% for t in transactions %}
-        <form method="post" action="/admin/complete/{{ t.id }}">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                ${{ t.amount }} - {{ t.payment_status }}
-                <button class="btn btn-sm btn-success">Mark Paid</button>
-            </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        ${{ t.amount }} - {{ t.payment_status }}
+        <form method="post" action="{{ url_for('mark_transaction_complete', transaction_id=t.id) }}">
+          <button class="btn btn-sm btn-success">Mark Paid</button>
         </form>
+      </li>
     {% endfor %}
+  {% else %}
+    <li class="list-group-item text-muted">No transactions available.</li>
+  {% endif %}
+</ul>
 
-    <h4>Withdrawals</h4>
+<!-- WITHDRAWALS SECTION -->
+<h4 class="mt-4">Withdrawals</h4>
+<ul class="list-group mb-3">
+  {% if withdrawals %}
     {% for w in withdrawals %}
-        <form method="post" action="/admin/approve-withdrawal/{{ w.id }}">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ w.username }} - ${{ w.amount }} - {{ w.status }}
-                <button class="btn btn-sm btn-primary">Approve</button>
-            </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ w.user.username }} - ${{ w.amount }} - {{ w.status }}
+        <form method="post" action="{{ url_for('approve_withdrawal', withdrawal_id=w.id) }}">
+          <button class="btn btn-sm btn-primary">Approve</button>
         </form>
+      </li>
     {% endfor %}
+  {% else %}
+    <li class="list-group-item text-muted">No withdrawals pending.</li>
+  {% endif %}
+</ul>
 
-    <a class="btn btn-outline-danger mt-3" href="/logout">Logout</a>
-</form>
+<!-- LOGOUT BUTTON -->
+<a class="btn btn-outline-danger mt-4" href="{{ url_for('logout') }}">Logout</a>
+
 {% endblock %}

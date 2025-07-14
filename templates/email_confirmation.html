@@ -1,11 +1,8 @@
 {% extends "base.html" %}
-{% block title %} Email_Comfirmation - GTO{% endblock %}
+{% block title %}Email Confirmation - GTO{% endblock %}
 {% block content %}
-<h2>comfirm your email</h2>
-<form method="post">
-    <h3>Hi!</h3>
-    <p>Please click the link below to confirm your email address and activate your account:</p>
-    <p><a href="{{ confirm_url }}">{{ confirm_url }}</a></p>
-    <p>If you didn’t register, you can safely ignore this email.</p>
-</form>
+<h3>Hi!</h3>
+<p>Please click the link below to confirm your email address and activate your account:</p>
+<p><a href="{{ confirm_url }}">{{ confirm_url }}</a></p>
+<p>If you didn’t register, you can safely ignore this email.</p>
 {% endblock %}

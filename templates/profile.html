@@ -1,67 +1,140 @@
 {% extends "base.html" %}
 {% block title %}Profile - GTO{% endblock %}
 {% block content %}
-<h2>Profile</h2>
-<form method="post">
-    <h2>Welcome {{ user.username }}</h2>
-    <p>Email: {{ user.email }}</p>
 
-    <hr>
-    <h4>Your Investments</h4>
-    <ul class="list-group mb-4">
-        {% for i in investments %}
-            <li class="list-group-item">{{ i.investment_type }} - ${{ i.amount }} - {{ i.status }}</li>
-        {% else %}
-            <li class="list-group-item text-muted">No investments yet.</li>
-        {% endfor %}
-    </ul>
+<div class="profile-container">
+  <!-- Top Header Section -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Welcome, {{ user.username }}</h2>
 
-    <h4>Your Transactions</h4>
-    <ul class="list-group mb-4">
-        {% for t in transactions %}
-            <li class="list-group-item">${{ t.amount }} - {{ t.payment_status }}</li>
-        {% else %}
-            <li class="list-group-item text-muted">No transactions yet.</li>
-        {% endfor %}
-    </ul>
+    <!-- Settings Dropdown -->
+    <div class="dropdown">
+      <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        ⚙ Settings
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" href="{{ url_for('edit_profile') }}">Edit Profile</a></li>
+        <li>
+          <form method="post" enctype="multipart/form-data" action="{{ url_for('upload_profile_pic') }}" class="px-3">
+            <input type="file" name="profile_image" accept="image/*" onchange="previewImage(event)">
+            <button class="btn btn-sm btn-primary mt-2 w-100">Upload Picture</button>
+          </form>
+        </li>
+        <li>
+          <form class="px-3 mt-2" method="post" action="{{ url_for('edit_profile') }}">
+            <input type="hidden" name="username" value="{{ user.username }}">
+            <button class="btn btn-sm btn-success w-100">Update Profile</button>
+          </form>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Logout</a></li>
+      </ul>
+    </div>
+  </div>
 
-    <h4>Your Withdrawals</h4>
-    <ul class="list-group mb-4">
-        {% for w in withdrawals %}
-            <li class="list-group-item">${{ w.amount }} - {{ w.status }}</li>
-        {% else %}
-            <li class="list-group-item text-muted">No withdrawals yet.</li>
-        {% endfor %}
-    </ul>
+  <!-- Profile Image -->
+  <div class="text-center mb-4">
+    <img src="{{ url_for('static', filename='upload/' + user.profile_image) if user.profile_image else 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y' }}"
+     alt="Profile Image"
+     class="rounded-circle"
+     id="profile-pic"
+     style="width: 140px; height: 140px; object-fit: cover; border: 3px solid #007bff;">
+  </div>
 
-    <form class="row g-3 mb-3" method="post" action="/invest">
-        <div class="col-md-5">
-            <input class="form-control" name="investment_type" placeholder="Investment Type" required>
+  <!-- Investments Section -->
+  <div class="dashboard-section">
+    <h3 style="color: darkgreen;">Your Investments</h3>
+    <p class="text-muted">No risk, no reward.</p>
+    <div class="card-container">
+      {% for i in investments %}
+        <div class="info-card">
+          <h5>{{ i.investment_type }}</h5>
+          <p><strong>Amount:</strong> ${{ i.amount }}</p>
+          <p><strong>Status:</strong> {{ i.status }}</p>
         </div>
-        <div class="col-md-5">
-            <input class="form-control" type="number" name="amount" step="0.01" placeholder="Amount" required>
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-primary w-100">Invest</button>
-        </div>
-    </form>
+      {% else %}
+        <p class="text-muted">No investments yet.</p>
+      {% endfor %}
+    </div>
+  </div>
 
-    <form class="row g-3 mb-3" method="post" action="/pay">
-        <div class="col-md-10">
-            <input class="form-control" name="amount" type="number" step="0.01" placeholder="Amount to pay via Flutterwave" required>
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-success w-100">Pay Now</button>
-        </div>
-    </form>
+  <!-- Return Chart -->
+  <div class="dashboard-section">
+    <h3 style="color: darkgreen;">Returns Chart</h3>
+    <canvas id="investmentChart" height="200"></canvas>
+  </div>
 
-    <form class="row g-3 mb-3" method="post" action="/withdraw">
-        <div class="col-md-3"><input class="form-control" name="amount" type="number" step="0.01" placeholder="Withdraw Amount" required></div>
-        <div class="col-md-3"><input class="form-control" name="method" placeholder="Method (e.g., bank, USDT)" required></div>
-        <div class="col-md-4"><input class="form-control" name="wallet" placeholder="Wallet/Account Info" required></div>
-        <div class="col-md-2"><button class="btn btn-danger w-100">Withdraw</button></div>
-    </form>
+  <!-- Transactions Section -->
+  <div class="dashboard-section">
+    <h3 style="color: darkgreen;">Your Transactions</h3>
+    <div class="card-container">
+      {% for t in transactions %}
+        <div class="info-card">
+          <p><strong>Amount:</strong> ${{ t.amount }}</p>
+          <p><strong>Status:</strong> {{ t.payment_status }}</p>
+        </div>
+      {% else %}
+        <p class="text-muted">No transactions yet.</p>
+      {% endfor %}
+    </div>
+  </div>
 
-    <a class="btn btn-secondary" href="/logout">Logout</a>
-</form>
+  <!-- Withdrawals Section -->
+  <div class="dashboard-section">
+    <h3 style="color: darkgreen;">Your Withdrawals</h3>
+    <div class="card-container">
+      {% for w in withdrawals %}
+        <div class="info-card">
+          <p><strong>Amount:</strong> ${{ w.amount }}</p>
+          <p><strong>Status:</strong> {{ w.status }}</p>
+        </div>
+      {% else %}
+        <p class="text-muted">No withdrawals yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Investment Form -->
+  <hr>
+  <h4>Invest Now</h4>
+  <form class="row g-3 mb-4" method="post" action="{{ url_for('invest')}}">
+    <div class="col-md-5">
+      <input class="form-control" name="investment_type" placeholder="Investment Type" required>
+    </div>
+    <div class="col-md-5">
+      <input class="form-control" type="number" name="amount" step="0.01" placeholder="Amount" required>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100">Invest</button>
+    </div>
+  </form>
+
+  <!-- Flutterwave Payment -->
+  <form class="row g-3 mb-4" method="post" action="{{ url_for('pay')}}">
+    <div class="col-md-10">
+      <input class="form-control" name="amount" type="number" step="0.01" placeholder="Amount to pay via Flutterwave" required>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-success w-100">Pay Now</button>
+    </div>
+  </form>
+
+  <!-- Withdrawal Form -->
+  <form class="row g-3 mb-5" method="post" action="{{ url_for('withdraw')}}">
+    <div class="col-md-3"><input class="form-control" name="amount" type="number" step="0.01" placeholder="Withdraw Amount" required></div>
+    <div class="col-md-3"><input class="form-control" name="method" placeholder="Method (e.g., bank, USDT)" required></div>
+    <div class="col-md-4"><input class="form-control" name="wallet" placeholder="Wallet/Account Info" required></div>
+    <div class="col-md-2"><button class="btn btn-danger w-100">Withdraw</button></div>
+  </form>
+
+  <!-- Crypto Prices -->
+  <div class="dashboard-section mt-5">
+    <h3 style="color: darkgreen;">Live Crypto Prices</h3>
+    <div id="cryptoPrices" class="text-muted"></div>
+  </div>
+</div>
+
+<!-- Include Chart.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 {% endblock %}

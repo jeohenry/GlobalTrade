@@ -71,3 +71,12 @@ const investmentChart = new Chart(ctx, {
     }
   }
 });
+
+function previewImage(event) {
+  const reader = new FileReader();
+  reader.onload = function () {
+    const output = document.getElementById('profile-pic');
+    output.src = reader.result;
+  };
+  reader.readAsDataURL(event.target.files[0]);
+}

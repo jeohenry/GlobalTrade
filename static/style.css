@@ -204,3 +204,50 @@ margin-bottom: 15px;
 padding: 10px;
 font-size: 16px;
 }
+.profile-container {
+  padding: 30px;
+  background: #f9f9f9;
+  border-radius: 15px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.profile-top {
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #007bff;
+}
+
+.edit-profile-form input {
+  margin-bottom: 10px;
+}
+
+.dashboard-section {
+  margin-top: 40px;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.info-card {
+  flex: 1 1 250px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.info-card h5 {
+  color: #007bff;
+  margin-bottom: 10px;
+}
