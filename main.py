@@ -35,10 +35,6 @@ db = SQLAlchemy(app)
 mail = Mail(app)
 s = URLSafeTimedSerializer(app.secret_key)
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
 #-------------------- MODELS --------------------#
 
 class User(db.Model):
@@ -80,6 +76,11 @@ class Withdrawal(db.Model):
     status = db.Column(db.String(50), default='pending')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+@app.before_first_request
+def create_tables():
+    with app.app_context():
+        db.create_all()
+        print("✅ Tables created.")
 #-------------------- ROUTES --------------------#
 
 @app.route('/')
