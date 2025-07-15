@@ -80,12 +80,6 @@ class Withdrawal(db.Model):
     status = db.Column(db.String(50), default='pending')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-#----CREATE TABLES AUTOMATICALLY---
-
-
-    with app.app_context():
-        db.create_all()
-        print("✅ Tables created.")
 #-------------------- ROUTES --------------------
 
 @app.route('/')
@@ -398,6 +392,11 @@ def logout():
     session.clear()
     flash("Logged out successfully.", "info")
     return redirect(url_for('home'))
+
+@app.route('/create-tables')
+def create_tables():
+    db.create_all()
+    return "✅ Tables created successfully!"
 
 #-------------------- INITIALIZER --------------------
 
