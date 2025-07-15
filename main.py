@@ -82,8 +82,7 @@ class Withdrawal(db.Model):
 
 #----CREATE TABLES AUTOMATICALLY---
 
-@app.before_first_request
-def create_tables():
+
     with app.app_context():
         db.create_all()
         print("✅ Tables created.")
