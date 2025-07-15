@@ -3,6 +3,7 @@ flask_sqlalchemy
 flask_mail
 itsdangerous
 werkzeug
+psycopg2-binary
 requests
 python-dotenv
 gunicorn
