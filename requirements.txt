@@ -6,5 +6,4 @@ werkzeug
 requests
 python-dotenv
 gunicorn
-os.system("pip install -r requirements.txt")
-sqlalchemy
+
