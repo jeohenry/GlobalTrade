@@ -11,13 +11,17 @@ from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv
 
+# load environment variables
+ 
 load_dotenv()
+
+# Initialize Flask app
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 
-#-------------------- CONFIGURATION --------------------#
+# set up database 
 app.config['UPLOAD_FOLDER'] = 'static/upload'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2MB max file size
@@ -35,7 +39,7 @@ db = SQLAlchemy(app)
 mail = Mail(app)
 s = URLSafeTimedSerializer(app.secret_key)
 
-#-------------------- MODELS --------------------#
+#-------------------- MODELS --------------------
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -76,12 +80,14 @@ class Withdrawal(db.Model):
     status = db.Column(db.String(50), default='pending')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+#----CREATE TABLES AUTOMATICALLY---
+
 @app.before_first_request
 def create_tables():
     with app.app_context():
         db.create_all()
         print("✅ Tables created.")
-#-------------------- ROUTES --------------------#
+#-------------------- ROUTES --------------------
 
 @app.route('/')
 def home():
@@ -394,10 +400,11 @@ def logout():
     flash("Logged out successfully.", "info")
     return redirect(url_for('home'))
 
-#-------------------- INITIALIZER --------------------#
+#-------------------- INITIALIZER --------------------
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        print("✅ Tables created")
     app.run(host='0.0.0.0', port=port, debug=False)
     
