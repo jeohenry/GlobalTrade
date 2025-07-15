@@ -31,6 +31,9 @@ app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
 
 db = SQLAlchemy(app)
+@app.before_first_request
+def create_tables():
+    db.create_all()
 mail = Mail(app)
 s = URLSafeTimedSerializer(app.secret_key)
 
