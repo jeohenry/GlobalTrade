@@ -403,12 +403,7 @@ def logout():
 #-------------------- INITIALIZER --------------------
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  # Get port from environment (needed for Render)
-
-    with app.app_context():
-        db.create_all()  # Create tables if they don't exist
-        print("✅ Tables created")
-
+    port = int(os.environ.get("PORT", 5000)) 
     app.run(host='0.0.0.0', port=port, debug=False)
 
     
