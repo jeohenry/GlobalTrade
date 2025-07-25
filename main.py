@@ -393,6 +393,11 @@ def logout():
     flash("Logged out successfully.", "info")
     return redirect(url_for('home'))
 
+@app.route('/create-tables')
+def create_tables():
+    db.create_all()
+    return "✅ Tables created successfully!"
+
 #-------------------- INITIALIZER --------------------
 
 if __name__ == '__main__':
